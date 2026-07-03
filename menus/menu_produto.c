@@ -98,10 +98,10 @@ static void lerTexto(const char *prompt, char *destino, size_t tamanho)
 static void cadastrarProduto(void)
 {
     Produto novoProduto;
-    FILE *arqProdutos = fopen(NOME_ARQUIVO, "rb+");
+    FILE *arqProdutos = fopen(ARQUIVO_PRODS, "rb+");
 
     if (arqProdutos == NULL) {
-        arqProdutos = fopen(NOME_ARQUIVO, "ab+");
+        arqProdutos = fopen(ARQUIVO_PRODS, "ab+");
         if (arqProdutos == NULL) {
             perror("Erro ao abrir o arquivo de produtos");
             return;
@@ -131,7 +131,7 @@ static void cadastrarProduto(void)
 static void removerProduto(void)
 {
     Produto produtoRemover;
-    FILE *arqProdutos = fopen(NOME_ARQUIVO, "rb");
+    FILE *arqProdutos = fopen(ARQUIVO_PRODS, "rb");
 
     if (arqProdutos == NULL) {
         printf("Nenhum produto cadastrado ou arquivo de produtos inacessivel.\n");
@@ -154,7 +154,7 @@ static void atualizarProduto(void)
 {
     Produto produtoAtual;
     Produto produtoAlterado;
-    FILE *arqProdutos = fopen(NOME_ARQUIVO, "rb+");
+    FILE *arqProdutos = fopen(ARQUIVO_PRODS, "rb+");
     long pos = 0;
     int campo;
 

@@ -199,9 +199,9 @@ void MenuVendaAtendimento(Pet *pet) {
   }
 
   /* Abre arquivo de produtos (leitura e escrita para desconto de estoque) */
-  FILE *arq_produtos = fopen(NOME_ARQUIVO, "rb+");
+  FILE *arq_produtos = fopen(ARQUIVO_PRODS, "rb+");
   if (arq_produtos == NULL) {
-    printf("  ERRO: Nao foi possivel abrir '%s'.\n", NOME_ARQUIVO);
+    printf("  ERRO: Nao foi possivel abrir '%s'.\n", ARQUIVO_PRODS);
     printf("  Verifique se existem produtos cadastrados.\n");
     aguardar_enter_vet();
     return;

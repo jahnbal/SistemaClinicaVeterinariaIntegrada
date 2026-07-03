@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 #define NOME_ARQUIVO_FUNC "Funcs.dat"
-#define QTDE_FUNCS 6
 
 typedef struct {
 

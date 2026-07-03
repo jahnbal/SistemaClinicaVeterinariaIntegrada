@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ARQUIVO_PRODS "produtos.dat"
-#define NOME_ARQUIVO "produtos.dat" // IMPORTANTE VER ISSO DEPOIS
+#define ARQUIVO_PRODS "produtos.dat" // IMPORTANTE VER ISSO DEPOIS
 #define ARQUIVO_TEMP_PRODS "produtos_temp.dat"
 
 #define TAM_DESCRICAO_PRODUTO 150
