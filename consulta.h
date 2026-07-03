@@ -4,9 +4,7 @@
 #include "funcionario.h"
 #include "pets.h"
 
-/* =========================================================
- * Status de uma consulta — adicionado conforme especificação
- * ========================================================= */
+// Status da consulta
 typedef enum {
     AGENDADA,
     EM_ATENDIMENTO,
@@ -14,9 +12,8 @@ typedef enum {
     CANCELADA
 } StatusConsulta;
 
-/* =========================================================
- * Estrutura principal de uma consulta
- * ========================================================= */
+
+//Estrutura principal de uma consulta
 typedef struct {
     int            id;           /* identificador único gerado em sequência   */
     Pet            animal;       /* pet em atendimento                        */
@@ -27,25 +24,25 @@ typedef struct {
     StatusConsulta status;       /* estado atual da consulta                  */
 } Consulta;
 
-/* =========================================================
- * Nó da lista encadeada — LP2: Lista Encadeada
- * ========================================================= */
+
+ // Nó da lista encadeada — LP2: Lista Encadeada
+
 typedef struct NoConsulta {
     Consulta          dados;
     struct NoConsulta *proximo;
 } NoConsulta;
 
-/* =========================================================
- * Cabeça da lista encadeada
- * ========================================================= */
+
+ // Cabeça da lista encadeada
+
 typedef struct {
     NoConsulta *inicio;
     int         tamanho;
 } ListaConsulta;
 
-/* =========================================================
- * Protótipos — funções em consulta.c
- * ========================================================= */
+
+ // Protótipos — funções em consulta.c
+
 Consulta  *MarcarConsulta(Consulta *consulta);
 int        RealizarConsulta(Consulta *consulta);
 int        RegistrarConsulta(Consulta consulta);
