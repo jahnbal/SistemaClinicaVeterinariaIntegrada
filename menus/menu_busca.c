@@ -36,7 +36,7 @@ void MenuBusca(void) {
     case 1:
 
       printf("\nBuscar Pet...\n");
-      printf("Id do Pet buscado: \n");
+      printf("Id do Pet buscado: ");
       scanf("%d", &bicho.id);
 
       buscado = BuscaPet(arq_pets, bicho.id, &bicho);
@@ -44,7 +44,7 @@ void MenuBusca(void) {
       if (buscado == 1) {
         printf("pet %s encontrado!\n", bicho.nome);
       } else {
-        printf("pet nao encontrado.\n");
+        printf("\npet nao encontrado.\n");
       }
 
       break;
