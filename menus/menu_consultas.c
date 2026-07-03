@@ -383,7 +383,6 @@ static void realizarConsulta(void) {
     RealizarConsulta(c);
 
     /* Registra e finaliza */
-    RegistrarConsulta(*c);
     c->status = FINALIZADA;
 
     printf("\n  Consulta realizada com sucesso!\n");
