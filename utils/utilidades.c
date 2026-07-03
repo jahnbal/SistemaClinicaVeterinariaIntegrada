@@ -15,8 +15,3 @@ int getOpcao(void) {
 
     return opcao;
 }
-
-void limparTela(void) {
-    printf("\033[2J\033[H");
-    fflush(stdout);
-}
