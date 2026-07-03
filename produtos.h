@@ -42,5 +42,5 @@ Produto *BuscaProdutoPorId(int id, FILE *arq);
  * Desconta 'quantidade' unidades do estoque do produto com o ID informado.
  * Retorna 1 em sucesso, 0 em falha (estoque insuficiente ou produto não encontrado).
  */
-int DescontaEstoque(int id, int quantidade, FILE *arq);
+int DescontaEstoque(int id, int quantidade);
 #endif
