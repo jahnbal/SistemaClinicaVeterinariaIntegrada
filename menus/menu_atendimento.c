@@ -15,6 +15,32 @@ static void imprimirMenu(void) {
     printf("3 - Voltar\n");
 }
 
+static int SelecionarPet(Pet *pet)
+{
+    FILE *arq = fopen(NOME_ARQUIVO_PETS, "rb");
+
+    if (arq == NULL)
+    {
+        printf("Erro ao abrir o arquivo de pets.\n");
+        return 0;
+    }
+
+    int id;
+
+    printf("\nInforme o ID do pet: ");
+    scanf("%d", &id);
+
+    if (!BuscaPet(arq, id, pet))
+    {
+        printf("Pet nao encontrado.\n");
+        fclose(arq);
+        return 0;
+    }
+
+    fclose(arq);
+    return 1;
+}
+
 void MenuAtendimento(void) {
     int opcao = 0;
 
@@ -26,25 +52,18 @@ void MenuAtendimento(void) {
         switch (opcao) {
 
         case 1:
-            /* Fluxo completo de consultas — menu_consultas.c */
+            // Fluxo completo de consultas
             MenuConsultas();
             break;
 
         case 2: {
-            /*
-             * TODO: integrar seleção de pet via arquivo.
-             * Por ora, usa pet de teste para não alterar o fluxo de vendas.
-             */
-            Pet petTeste;
-            petTeste.id         = 1;
-            petTeste.id_Cliente = 1;
-            petTeste.idade      = 5;
-            petTeste.peso       = 20.5f;
-            petTeste.estado     = BOA;
-            strncpy(petTeste.nome, "Ray", sizeof(petTeste.nome));
-            petTeste.nome[sizeof(petTeste.nome) - 1] = '\0';
+    
+            Pet pet;
 
-            MenuVendaAtendimento(&petTeste);
+            if (SelecionarPet(&pet))
+            {
+                MenuVendaAtendimento(&pet);
+            }
             break;
         }
 
