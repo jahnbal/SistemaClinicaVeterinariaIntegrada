@@ -4,6 +4,4 @@
 
 int getOpcao(void);
 
-void limparTela(void);
-
 #endif
