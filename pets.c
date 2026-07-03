@@ -119,7 +119,6 @@ void AtualizaPet(Pet *bicho) {
   }
 
   int opcao;
-  int est;
 
   if (bicho == NULL) {
     printf("Erro: pet invalido.\n");
