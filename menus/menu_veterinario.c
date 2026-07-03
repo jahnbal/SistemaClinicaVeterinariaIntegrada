@@ -74,6 +74,7 @@ static void removerVeterinario(void) {
   scanf(" %c", &opcao);
 
   if (opcao == 'S' || opcao == 's') {
+    fclose(arqVeterinario);
     RemoveFunc(vet);
   } else {
     fclose(arqVeterinario);
