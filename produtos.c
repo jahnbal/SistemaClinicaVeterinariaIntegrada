@@ -146,7 +146,7 @@ int DescontaEstoque(int id, int quantidade, FILE *arq) {
   while (fread(&temp, sizeof(Produto), 1, arq) == 1) {
     if (temp.id == id && temp.ativo) {
       if (temp.quantidade < quantidade) {
-        printf("  Estoque insuficiente para o produto ID %d.\n", id);
+
         fclose(arq);
         return 0;
       }
