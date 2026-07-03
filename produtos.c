@@ -11,7 +11,7 @@ int VerificaProduto(Produto *produto, FILE *arq) {
     if (temp.id == produto->id) {
 
       printf("Produto encontrado!\n");
-      printf("%fR$ , %d unidades", produto->preco, produto->quantidade);
+      printf("\n%.2fR$ , %d unidades\n", temp.preco, temp.quantidade);
       return 1;
     }
   }
