@@ -126,7 +126,7 @@ int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
   fwrite(&aux, sizeof(Funcionario), 1, arq);
   fflush(arq);
 
-  printf("Funcionario '%s' (id %d) alterado com sucesso!\n", aux.nome, aux.id);
+  printf("Funcionario alterado com sucesso!\n");
   return 1;
 }
 
