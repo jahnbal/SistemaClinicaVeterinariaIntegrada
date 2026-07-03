@@ -19,11 +19,13 @@ void MenuBusca(void) {
 
   int opcao = 0;
   int buscado;
+  Funcionario funcionario;
   Funcionario *encontrado = NULL;
   Produto produto;
   Pet bicho;
   FILE *arq_produtos = fopen(ARQUIVO_PRODS, "rb");
   FILE *arq_pets = fopen(NOME_ARQUIVO_PETS, "rb");
+  FILE *arq_funcs = fopen(NOME_ARQUIVO_FUNC, "rb");
 
   while (opcao != 4) {
     imprimirMenu();
@@ -49,7 +51,9 @@ void MenuBusca(void) {
 
     case 2:
 
-      encontrado = BuscarFuncionario(NULL, QTDE_FUNCS, 5);
+      printf("Digite o id do Funcionario buscado:\n");
+      scanf("%d", &funcionario.id),
+          encontrado = BuscarFuncionarioPorID(arq_funcs, funcionario.id);
 
       if (encontrado != NULL) {
         printf("Nome: %s\n", encontrado->nome);

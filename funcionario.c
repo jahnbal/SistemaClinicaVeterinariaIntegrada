@@ -32,35 +32,31 @@ void CadastroFunc(FILE *arq) {
          func.id);
 }
 
-void RemoveFunc(Funcionario *func, FILE *arq)
-{
-    FILE *temp = fopen("temp.bin", "wb");
+void RemoveFunc(Funcionario *func, FILE *arq) {
+  FILE *temp = fopen("temp.bin", "wb");
 
-    if (temp == NULL)
-    {
-        printf("Erro ao criar arquivo temporario.\n");
-        return;
+  if (temp == NULL) {
+    printf("Erro ao criar arquivo temporario.\n");
+    return;
+  }
+
+  Funcionario aux;
+
+  rewind(arq);
+
+  while (fread(&aux, sizeof(Funcionario), 1, arq) == 1) {
+    if (aux.id != func->id) {
+      fwrite(&aux, sizeof(Funcionario), 1, temp);
     }
+  }
 
-    Funcionario aux;
+  fclose(temp);
+  fclose(arq);
 
-    rewind(arq);
+  remove(NOME_ARQUIVO_FUNC);
+  rename("temp.bin", NOME_ARQUIVO_FUNC);
 
-    while (fread(&aux, sizeof(Funcionario), 1, arq) == 1)
-    {
-        if (aux.id != func->id)
-        {
-            fwrite(&aux, sizeof(Funcionario), 1, temp);
-        }
-    }
-
-    fclose(temp);
-    fclose(arq);
-
-    remove(NOME_ARQUIVO_FUNC);
-    rename("temp.bin", NOME_ARQUIVO_FUNC);
-
-    printf("\nVeterinario removido com sucesso!\n");
+  printf("\nVeterinario removido com sucesso!\n");
 }
 
 int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
@@ -123,32 +119,16 @@ int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
   return 1;
 }
 
-Funcionario *BuscarFuncionario(Funcionario *vetor, int tamanho, int id) {
-  int i;
+Funcionario *BuscarFuncionarioPorID(FILE *arq, int id) {
+  static Funcionario func;
 
-  for (i = 0; i < tamanho; i++) {
-    if (vetor[i].id == id) {
-      return &vetor[i];
+  rewind(arq);
+
+  while (fread(&func, sizeof(Funcionario), 1, arq) == 1) {
+    if (func.id == id) {
+      return &func;
     }
   }
 
-  return NULL; /* nao encontrado */
-}
-
-
-Funcionario *BuscarFuncionarioPorID(FILE *arq, int id)
-{
-    static Funcionario func;
-
-    rewind(arq);
-
-    while (fread(&func, sizeof(Funcionario), 1, arq) == 1)
-    {
-        if (func.id == id)
-        {
-            return &func;
-        }
-    }
-
-    return NULL;
+  return NULL;
 }

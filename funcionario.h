@@ -19,7 +19,6 @@ void CadastroFunc(FILE *arq);
 void RemoveFunc(Funcionario *func, FILE *arq);
 int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
                int *novosHorarios, FILE *arq);
-Funcionario *BuscarFuncionario(Funcionario *vetor, int tamanho, int id);
 
 Funcionario *BuscarFuncionarioPorID(FILE *arq, int id);
 
