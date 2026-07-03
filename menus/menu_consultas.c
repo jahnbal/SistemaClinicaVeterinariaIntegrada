@@ -260,7 +260,13 @@ static void agendarConsulta(void) {
 
         do {
             printf("Informe o ID do veterinario: ");
+            printf(">> Aperte 0 para cancelar\n ");
             scanf("%d", &id_vet);
+            if (id_vet == 0) {
+                printf("  Agendamento cancelado.\n");
+                fclose(arq_funcs);
+                return;
+            }
             getchar();
             vet = BuscarFuncionarioPorID(arq_funcs, id_vet);
             if (vet == NULL)
