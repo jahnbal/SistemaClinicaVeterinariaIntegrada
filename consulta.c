@@ -52,13 +52,6 @@ int RealizarConsulta(Consulta *consulta) {
   return 1;
 }
 
-int RegistrarConsulta(Consulta consulta) {
-  /* Aqui entraria a logica de registrar a consulta (ex: salvar em
-   * arquivo/banco) */
-  printf("Consulta registrada com sucesso!\n");
-  return 1;
-}
-
 void InicializarLista(ListaConsulta *lista) {
   lista->inicio = NULL;
   lista->tamanho = 0;
