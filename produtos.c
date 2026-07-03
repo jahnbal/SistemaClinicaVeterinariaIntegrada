@@ -133,9 +133,9 @@ Produto *BuscaProdutoPorId(int id, FILE *arq) {
  * DescontaEstoque — reduz a quantidade em estoque de um produto.
  * Reescreve apenas o registro alterado diretamente no arquivo.
  * ───────────────────────────────────────────────────────────────────────── */
-int DescontaEstoque(int id, int quantidade, FILE *arq) {
+int DescontaEstoque(int id, int quantidade) {
 
-  arq = fopen(ARQUIVO_PRODS, "rb+");
+  FILE* arq = fopen(ARQUIVO_PRODS, "rb+");
   if (!arq) {
     printf("Erro ao abrir arquivo");
     return 0;
