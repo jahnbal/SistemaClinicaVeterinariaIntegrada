@@ -94,21 +94,21 @@ int RemoveProduto(Produto *produto, FILE *arq) {
  * ListaTodosProdutos — imprime tabela de produtos ativos
  * ───────────────────────────────────────────────────────────────────────── */
 void ListaTodosProdutos(FILE *arq) {
-    Produto p;
-    rewind(arq);
-    printf("  %-5s | %-30s | %-11s | %s\n", "ID", "NOME", "PRECO", "ESTOQUE");
-    printf("  %s\n", "-------------------------------------------------------");
-    int total = 0;
-    while (fread(&p, sizeof(Produto), 1, arq) == 1) {
-        if (p.ativo) {
-            printf("  %-5d | %-30s | R$ %-8.2f | %d\n",
-                   p.id, p.nome, p.preco, p.quantidade);
-            total++;
-        }
+  Produto p;
+  rewind(arq);
+  printf("  %-5s | %-30s | %-11s | %s\n", "ID", "NOME", "PRECO", "ESTOQUE");
+  printf("  %s\n", "-------------------------------------------------------");
+  int total = 0;
+  while (fread(&p, sizeof(Produto), 1, arq) == 1) {
+    if (p.ativo) {
+      printf("  %-5d | %-30s | R$ %-8.2f | %d\n", p.id, p.nome, p.preco,
+             p.quantidade);
+      total++;
     }
-    if (total == 0)
-        printf("  (nenhum produto cadastrado)\n");
-    printf("\n");
+  }
+  if (total == 0)
+    printf("  (nenhum produto cadastrado)\n");
+  printf("\n");
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -116,16 +116,17 @@ void ListaTodosProdutos(FILE *arq) {
  * (Alocação dinâmica — req. LP2)
  * ───────────────────────────────────────────────────────────────────────── */
 Produto *BuscaProdutoPorId(int id, FILE *arq) {
-    Produto temp;
-    rewind(arq);
-    while (fread(&temp, sizeof(Produto), 1, arq) == 1) {
-        if (temp.id == id && temp.ativo) {
-            Produto *encontrado = (Produto *)malloc(sizeof(Produto));
-            if (encontrado) *encontrado = temp;
-            return encontrado;
-        }
+  Produto temp;
+  rewind(arq);
+  while (fread(&temp, sizeof(Produto), 1, arq) == 1) {
+    if (temp.id == id && temp.ativo) {
+      Produto *encontrado = (Produto *)malloc(sizeof(Produto));
+      if (encontrado)
+        *encontrado = temp;
+      return encontrado;
     }
-    return NULL;
+  }
+  return NULL;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -133,23 +134,35 @@ Produto *BuscaProdutoPorId(int id, FILE *arq) {
  * Reescreve apenas o registro alterado diretamente no arquivo.
  * ───────────────────────────────────────────────────────────────────────── */
 int DescontaEstoque(int id, int quantidade, FILE *arq) {
-    Produto temp;
-    rewind(arq);
-    long pos = 0;
-    while (fread(&temp, sizeof(Produto), 1, arq) == 1) {
-        if (temp.id == id && temp.ativo) {
-            if (temp.quantidade < quantidade) {
-                printf("  Estoque insuficiente para o produto ID %d.\n", id);
-                return 0;
-            }
-            temp.quantidade -= quantidade;
-            fseek(arq, pos, SEEK_SET);
-            fwrite(&temp, sizeof(Produto), 1, arq);
-            fflush(arq);
-            return 1;
-        }
-        pos += (long)sizeof(Produto);
-    }
-    printf("  Produto ID %d nao encontrado para desconto de estoque.\n", id);
+
+  arq = fopen(ARQUIVO_PRODS, "rb+");
+  if (!arq) {
+    printf("Erro ao abrir arquivo");
     return 0;
+  }
+  Produto temp;
+  rewind(arq);
+
+  while (fread(&temp, sizeof(Produto), 1, arq) == 1) {
+    if (temp.id == id && temp.ativo) {
+      if (temp.quantidade < quantidade) {
+        printf("  Estoque insuficiente para o produto ID %d.\n", id);
+        fclose(arq);
+        return 0;
+      }
+      temp.quantidade -= quantidade;
+
+      long pos_atual = ftell(arq);
+      fseek(arq, pos_atual - sizeof(Produto), SEEK_SET);
+
+      fwrite(&temp, sizeof(Produto), 1, arq);
+      fflush(arq);
+
+      fclose(arq);
+      return 1;
+    }
+  }
+  printf("  Produto ID %d nao encontrado para desconto de estoque.\n", id);
+  fclose(arq);
+  return 0;
 }
