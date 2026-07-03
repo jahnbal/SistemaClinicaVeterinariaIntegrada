@@ -59,7 +59,9 @@ void CadastraPet(Pet *bicho, FILE *arq) {
   printf("Pet '%s' (id: %d) cadastrado com sucesso!\n", bicho->nome, bicho->id);
 }
 
-int RemovePet(Pet bicho, FILE *arq) {
+int RemovePet(Pet bicho) {
+
+  FILE *arq = fopen(NOME_ARQUIVO_PETS, "rb");
   FILE *temp;
   Pet aux;
   int removido = 0;
@@ -82,37 +84,35 @@ int RemovePet(Pet bicho, FILE *arq) {
       continue; /* pula o pet a ser removido */
     }
     fwrite(&aux, sizeof(Pet), 1, temp);
-    fclose(temp);
-
-    if (!removido) {
-      printf("Pet com id %d nao encontrado.\n", bicho.id);
-      remove("pets_temp.dat");
-      return 0;
-    }
-
-    fclose(arq);
-
-    if (remove(NOME_ARQUIVO_PETS) != 0) {
-      printf("Erro ao remover arquivo original.\n");
-      return 0;
-    }
-
-    if (rename("pets_temp.dat", "pets.dat") != 0) {
-      printf("Erro ao renomear arquivo temporario.\n");
-      return 0;
-    }
-
-    printf("Pet '%s' (id %d) removido com sucesso!\n", bicho.nome, bicho.id);
-    return 1;
   }
-  return 2;
+  fclose(temp);
+
+  if (!removido) {
+    printf("Pet com id %d nao encontrado.\n", bicho.id);
+    remove("pets_temp.dat");
+    return 0;
+  }
+
+  fclose(arq);
+
+  if (remove(NOME_ARQUIVO_PETS) != 0) {
+    printf("Erro ao remover arquivo original.\n");
+    return 0;
+  }
+
+  if (rename("pets_temp.dat", NOME_ARQUIVO_PETS) != 0) {
+    printf("Erro ao renomear arquivo temporario.\n");
+    return 0;
+  }
+
+  return 1;
 }
 
 void AtualizaPet(Pet *bicho) {
 
   FILE *arquivo_at_pets = fopen(NOME_ARQUIVO_PETS, "rb");
   int remocao;
-  remocao = RemovePet(*bicho, arquivo_at_pets);
+  remocao = RemovePet(*bicho);
 
   if (remocao == 0 || remocao == -1) {
     return;

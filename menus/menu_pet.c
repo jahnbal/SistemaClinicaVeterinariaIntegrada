@@ -30,20 +30,19 @@ static void cadastrarPet(void) {
 
 static void removerPet(void) {
 
+  int remocao;
   Pet bicho;
-  FILE *arquivo_r_pets = fopen(NOME_ARQUIVO_PETS, "rb");
-
-  if (arquivo_r_pets == NULL) {
-    printf("Erro ao abrir arquivo");
-  }
 
   printf("\n[Remover Pet]\n");
   printf("Id do pet a ser removido:");
   scanf("%d", &bicho.id);
 
-  RemovePet(bicho, arquivo_r_pets);
-
-  fclose(arquivo_r_pets);
+  remocao = RemovePet(bicho);
+  if (remocao == 1 || remocao == 2) {
+    printf("pet removido com sucesso!\n");
+  } else {
+    printf("falha em remover pet\n");
+  }
 }
 
 static void atualizarPet(void) {
