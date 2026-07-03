@@ -6,7 +6,7 @@ void IniciaPet(Pet *bicho) {
 
   int c;
 
-  printf("Td do pet: \n");
+  printf("Id do pet: \n");
   scanf("%d", &bicho->id);
 
   printf("Id do tutor: \n");
