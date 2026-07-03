@@ -16,7 +16,7 @@ typedef struct {
 } Funcionario;
 
 void CadastroFunc(FILE *arq);
-void RemoveFunc(Funcionario *func, FILE *arq);
+void RemoveFunc(Funcionario *func);
 int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
                int *novosHorarios, FILE *arq);
 

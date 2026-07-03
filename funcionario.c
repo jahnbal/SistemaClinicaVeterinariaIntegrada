@@ -32,7 +32,13 @@ void CadastroFunc(FILE *arq) {
          func.id);
 }
 
-void RemoveFunc(Funcionario *func, FILE *arq) {
+void RemoveFunc(Funcionario *func) {
+  FILE *arq = fopen(NOME_ARQUIVO_FUNC, "rb");
+  if (!arq) {
+    printf("falha em abrir o arquivo");
+    return;
+  }
+
   FILE *temp = fopen("temp.bin", "wb");
 
   if (temp == NULL) {
@@ -53,8 +59,13 @@ void RemoveFunc(Funcionario *func, FILE *arq) {
   fclose(temp);
   fclose(arq);
 
-  remove(NOME_ARQUIVO_FUNC);
-  rename("temp.bin", NOME_ARQUIVO_FUNC);
+  if (remove(NOME_ARQUIVO_FUNC) != 0) {
+    printf("Erro ao deletar o arquivo antigo\n");
+  }
+
+  if (rename("temp.bin", NOME_ARQUIVO_FUNC) != 0) {
+    printf("Erro ao renomear arquivo temporario\n");
+  }
 
   printf("\nVeterinario removido com sucesso!\n");
 }
