@@ -53,7 +53,7 @@ static void descontar_estoque_carrinho(Carrinho *carrinho, FILE *arq_produtos) {
   ItemCarrinho *atual = carrinho->cabeca;
   while (atual != NULL) {
     desconta =
-        DescontaEstoque(atual->id_produto, atual->quantidade, arq_produtos);
+        DescontaEstoque(atual->id_produto, atual->quantidade);
     atual = atual->proximo;
   }
   if (desconta == 0) {
