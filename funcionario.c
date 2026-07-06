@@ -112,9 +112,11 @@ int AlteraFunc(int id, const char *novoNome, int novaOcupacao,
     }
   }
 
-  /* O fread acima avancou o cursor um registro para frente.
-   * Volta exatamente um sizeof(Funcionario) para sobrescrever
-   * o registro encontrado. */
+  /* 
+  O fread acima avancou o cursor um registro para frente.
+    Volta exatamente um sizeof(Funcionario) para sobrescrever
+    o registro encontrado. 
+  */
 
   pos = ftell(arq) - (long)sizeof(Funcionario);
   if (pos < 0) {

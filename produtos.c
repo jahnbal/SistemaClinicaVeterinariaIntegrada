@@ -90,9 +90,7 @@ int RemoveProduto(Produto *produto, FILE *arq) {
   return 1;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * ListaTodosProdutos — imprime tabela de produtos ativos
- * ───────────────────────────────────────────────────────────────────────── */
+// ListaTodosProdutos — imprime tabela de produtos ativos
 void ListaTodosProdutos(FILE *arq) {
   Produto p;
   rewind(arq);
@@ -111,10 +109,7 @@ void ListaTodosProdutos(FILE *arq) {
   printf("\n");
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * BuscaProdutoPorId — retorna Produto* alocado dinamicamente ou NULL
- * (Alocação dinâmica — req. LP2)
- * ───────────────────────────────────────────────────────────────────────── */
+//BuscaProdutoPorId — retorna Produto* alocado dinamicamente ou NULL
 Produto *BuscaProdutoPorId(int id, FILE *arq) {
   Produto temp;
   rewind(arq);
@@ -129,10 +124,8 @@ Produto *BuscaProdutoPorId(int id, FILE *arq) {
   return NULL;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * DescontaEstoque — reduz a quantidade em estoque de um produto.
- * Reescreve apenas o registro alterado diretamente no arquivo.
- * ───────────────────────────────────────────────────────────────────────── */
+//DescontaEstoque — reduz a quantidade em estoque de um produto.
+// Reescreve apenas o registro alterado diretamente no arquivo.
 int DescontaEstoque(int id, int quantidade) {
 
   FILE* arq = fopen(ARQUIVO_PRODS, "rb+");

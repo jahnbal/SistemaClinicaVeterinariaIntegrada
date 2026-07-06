@@ -1,11 +1,3 @@
-/*
- * utils/utils_venda.h — Utilitários de I/O para o módulo de vendas
- *
- * Se o projeto já possuir funções equivalentes em outro arquivo da pasta
- * utils/, basta remover as declarações duplicadas e ajustar o #include
- * no menu_venda.c.
- */
-
 #ifndef UTILS_VENDA_H
 #define UTILS_VENDA_H
 

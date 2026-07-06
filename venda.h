@@ -1,19 +1,3 @@
-/*
- * venda.h — Módulo de Vendas durante o Atendimento Veterinário
- *
- * Integra a lógica de venda da LojaIntegrada ao fluxo de atendimento
- * da clínica veterinária.
- *
- * Conceitos de LP2 demonstrados neste módulo:
- *   [1] Funções recursivas   → CalculaTotalRecursivo()
- *   [2] Duplos ponteiros     → RemoveItemCarrinhoById(), LimpaCarrinho()
- *   [3] Alocação dinâmica    → malloc() para nós do carrinho e relatório
- *   [4] Vetores dinâmicos    → realloc() na geração de relatório
- *   [5] Matrizes dinâmicas   → matriz alocada em GerarRelatorioVendas()
- *   [6] Listas encadeadas    → struct ItemCarrinho com ponteiro *proximo
- *   [7] Ponteiros de função  → FuncExibeProduto em ListaProdutosVenda()
- */
-
 #ifndef VENDA_H
 #define VENDA_H
 
@@ -22,15 +6,9 @@
 #include "produtos.h"
 #include "pets.h"
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  ESTRUTURAS
- * ═══════════════════════════════════════════════════════════════════════════ */
+typedef void (*FuncExibeProduto)(Produto *produto);
 
-/*
- * [LP2 — Lista Encadeada]
- * Cada nó representa um item adicionado ao carrinho.
- * O campo *proximo forma a lista encadeada simplesmente ligada.
- */
+// Cada item do carrinho é um nó da lista encadeada
 typedef struct ItemCarrinho {
     int    id_produto;
     char   nome_produto[TAM_NOME_PRODUTO];
@@ -40,9 +18,8 @@ typedef struct ItemCarrinho {
     struct ItemCarrinho *proximo; /* próximo nó da lista encadeada */
 } ItemCarrinho;
 
-/*
- * Carrinho de compras: cabeça da lista encadeada + metadados.
- */
+
+// Carrinho de compras: cabeça da lista encadeada + metadados.
 typedef struct {
     ItemCarrinho *cabeca; /* [LP2 — Lista Encadeada] cabeça da lista */
     int   qtd_itens;
@@ -70,61 +47,33 @@ typedef struct {
     float troco;
 } RegistroVenda;
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  [LP2 — Ponteiro de Função]
- *  Tipo para funções de exibição de produto. Permite trocar o formato
- *  de listagem sem alterar ListaProdutosVenda().
- * ═══════════════════════════════════════════════════════════════════════════ */
-typedef void (*FuncExibeProduto)(Produto *);
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  OPERAÇÕES COM CARRINHO
- * ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Inicializa um carrinho vazio */
+
+// Inicializa um carrinho vazio 
 void InicializaCarrinho(Carrinho *carrinho);
 
-/*
- * Adiciona (ou atualiza) um item no carrinho.
- * Aloca um novo nó dinamicamente. Verifica estoque disponível.
- * Retorna 1 em sucesso, 0 em falha.
- */
+//Adiona um item ao carrinho, alocando dinamicamente um novo nó da lista encadeada.
 int AdicionaItemCarrinho(Carrinho *carrinho,
                          int id_produto,
                          int quantidade,
                          FILE *arq_produtos);
 
-/*
- * [LP2 — Duplo Ponteiro]
- * Remove do carrinho o item com id_produto informado.
- * Usa Carrinho** para poder atualizar a cabeça da lista quando necessário.
- * Retorna 1 em sucesso, 0 se não encontrado.
- */
+// Remove um item do carrinho pelo ID do produto, liberando o nó da lista encadeada.
 int RemoveItemCarrinhoById(Carrinho **carrinho, int id_produto);
 
-/*
- * Libera toda a memória da lista encadeada e zera o carrinho.
- * (O duplo ponteiro é demonstrado em RemoveItemCarrinhoById acima.)
- */
+// Libera todos os itens do carrinho
 void LimpaCarrinho(Carrinho *carrinho);
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CÁLCULO E EXIBIÇÃO
- * ═══════════════════════════════════════════════════════════════════════════ */
 
-/*
- * [LP2 — Função Recursiva]
- * Percorre a lista recursivamente somando total_item de cada nó.
- */
+
+// Percorre recursivamente a lista encadeada do carrinho e calcula o total da compra.
 float CalculaTotalRecursivo(ItemCarrinho *item);
 
-/*
- * Lista produtos ativos do arquivo usando a função de exibição recebida
- * por ponteiro. [LP2 — Ponteiro de Função]
- */
+// Lista todos os produtos disponíveis para venda, chamando a função de callback exibe().
 void ListaProdutosVenda(FILE *arq_produtos, FuncExibeProduto exibe);
 
-/* Implementação padrão de FuncExibeProduto */
+// Implementação padrão de FuncExibeProduto
 void ExibeProdutoPadrao(Produto *p);
 
 /* Exibe o carrinho formatado na tela */

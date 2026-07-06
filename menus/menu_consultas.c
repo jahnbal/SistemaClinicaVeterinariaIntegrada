@@ -1,21 +1,11 @@
-/*
- * menus/menu_consultas.c — Módulo de Consultas
- *
- * Implementa o fluxo completo do submenu "Consultas" conforme especificação
- * funcional do ProjetoLP2.
- *
- * Conceitos LP2 demonstrados neste arquivo:
- *   - Lista Encadeada   : ListaConsulta (NoConsulta*)
- *   - Alocação Dinâmica : InserirConsulta (malloc em consulta.c) +
- *                         vetor de ponteiros em listarConsultas()
- *   - Vetor Dinâmico    : arr[] em listarConsultas() para ordenação
- *
- * Funções reaproveitadas de outros módulos:
- *   consulta.c   → InicializarLista, InserirConsulta, RemoverConsulta,
- *                  VerificarConflito, ReallizarConsulta, RegistrarConsulta
- *   pets.c       → BuscaPet, IniciaPet, CadastraPet
- *   funcionario.c → BuscarFuncionarioPorID
- */
+// Aqui tem Lista Encadeada, Alocação Dinâmica e Vetor Dinâmico
+
+/*  
+Lista Encadeada: ListaConsulta (NoConsulta*)
+Alocação Dinâmica: InserirConsulta (malloc em consulta.c) + vetor de ponteiros em listarConsultas()
+vetor Dinâmico: arr[] em listarConsultas() para ordenação
+*/
+
 
 #include "menu_consultas.h"
 

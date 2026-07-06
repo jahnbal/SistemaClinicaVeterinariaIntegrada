@@ -1,12 +1,3 @@
-/*
- * venda.c — Implementação do módulo de vendas durante o atendimento
- *
- * Lógica central portada da LojaIntegrada e adaptada ao contexto da
- * clínica veterinária: o "cliente" é identificado pelo pet em atendimento,
- * o estoque é controlado em arquivo binário e o carrinho é uma lista
- * encadeada alocada dinamicamente.
- */
-
 #include "venda.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,10 +13,10 @@ void InicializaCarrinho(Carrinho *carrinho) {
     carrinho->total     = 0.0f;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CARRINHO — ADIÇÃO DE ITEM
- *  [LP2 — Alocação Dinâmica] malloc para cada novo nó da lista
- * ═══════════════════════════════════════════════════════════════════════════ */
+
+ // CARRINHO — ADIÇÃO DE ITEM
+ // malloc para cada novo nó da lista
+
 
 int AdicionaItemCarrinho(Carrinho *carrinho,
                          int id_produto,
@@ -86,12 +77,9 @@ int AdicionaItemCarrinho(Carrinho *carrinho,
     return 1;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CARRINHO — REMOÇÃO DE ITEM
- *  [LP2 — Duplo Ponteiro] usa ItemCarrinho** para reescrever qualquer
- *  ponteiro da lista (cabeça ou campo *proximo de um nó anterior)
- * ═══════════════════════════════════════════════════════════════════════════ */
 
+ //  CARRINHO — REMOÇÃO DE ITEM
+ //  usa ItemCarrinho** para reescrever qualquer
 int RemoveItemCarrinhoById(Carrinho **carrinho, int id_produto) {
     if (*carrinho == NULL || (*carrinho)->cabeca == NULL)
         return 0;
@@ -114,10 +102,10 @@ int RemoveItemCarrinhoById(Carrinho **carrinho, int id_produto) {
     return 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CARRINHO — LIMPEZA TOTAL
- *  [LP2 — Duplo Ponteiro] recebe Carrinho** para zerar a estrutura original
- * ═══════════════════════════════════════════════════════════════════════════ */
+
+ // CARRINHO — LIMPEZA TOTAL
+ 
+
 
 void LimpaCarrinho(Carrinho *carrinho) {
     if (carrinho == NULL) return;
@@ -146,19 +134,19 @@ float CalculaTotalRecursivo(ItemCarrinho *item) {
     return item->total_item + CalculaTotalRecursivo(item->proximo);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  EXIBIÇÃO DE PRODUTO — implementação padrão do tipo FuncExibeProduto
- * ═══════════════════════════════════════════════════════════════════════════ */
+
+// EXIBIÇÃO DE PRODUTO — implementação padrão do tipo FuncExibeProduto
+ 
 
 void ExibeProdutoPadrao(Produto *p) {
     printf("  %-5d | %-30s | R$ %-8.2f | Estoque: %d\n",
            p->id, p->nome, p->preco, p->quantidade);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  LISTAGEM DE PRODUTOS COM PONTEIRO DE FUNÇÃO
- *  [LP2 — Ponteiro de Função] 'exibe' pode ser trocado pelo chamador
- * ═══════════════════════════════════════════════════════════════════════════ */
+
+ // LISTAGEM DE PRODUTOS COM PONTEIRO DE FUNÇÃO
+ 
+
 
 void ListaProdutosVenda(FILE *arq_produtos, FuncExibeProduto exibe) {
     Produto p;
@@ -170,7 +158,7 @@ void ListaProdutosVenda(FILE *arq_produtos, FuncExibeProduto exibe) {
 
     while (fread(&p, sizeof(Produto), 1, arq_produtos) == 1) {
         if (p.ativo && p.quantidade > 0) {
-            exibe(&p);   /* chamada via ponteiro de função [LP2] */
+            exibe(&p);   // chama com ponteiro para função
             total++;
         }
     }
@@ -179,9 +167,9 @@ void ListaProdutosVenda(FILE *arq_produtos, FuncExibeProduto exibe) {
     printf("\n");
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  EXIBIÇÃO DO CARRINHO
- * ═══════════════════════════════════════════════════════════════════════════ */
+
+ //EXIBIÇÃO DO CARRINHO
+
 
 void ExibeCarrinho(Carrinho *carrinho) {
     if (carrinho->qtd_itens == 0) {
@@ -193,7 +181,7 @@ void ExibeCarrinho(Carrinho *carrinho) {
            "PRODUTO", "QTD", "UNIT. (R$)", "TOTAL (R$)");
     printf("  %s\n", "------------------------------------------------------------");
 
-    /* Percorre a lista encadeada [LP2 — Lista Encadeada] */
+    // Percorre a lista encadeada
     ItemCarrinho *atual = carrinho->cabeca;
     while (atual != NULL) {
         printf("  %-30s | %-5d | %-10.2f | %.2f\n",
@@ -208,11 +196,8 @@ void ExibeCarrinho(Carrinho *carrinho) {
     printf("  TOTAL DO CARRINHO: R$ %.2f\n\n", carrinho->total);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  NOTA FISCAL
- *  Exibe o comprovante completo da venda (portado da LojaIntegrada).
- * ═══════════════════════════════════════════════════════════════════════════ */
 
+ // NOTA FISCAL
 void ImprimirNotaFiscal(Carrinho *carrinho, Pet *pet, float valor_pago) {
     float troco = valor_pago - carrinho->total;
 
@@ -249,10 +234,7 @@ void ImprimirNotaFiscal(Carrinho *carrinho, Pet *pet, float valor_pago) {
     printf("  Obrigado! Volte sempre.\n\n");
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  PERSISTÊNCIA DA VENDA
- * ═══════════════════════════════════════════════════════════════════════════ */
-
+// PERSISTÊNCIA DA VENDA
 int SalvaRegistroVenda(RegistroVenda *venda, FILE *arq_vendas) {
     fseek(arq_vendas, 0, SEEK_END);
     if (fwrite(venda, sizeof(RegistroVenda), 1, arq_vendas) != 1) {
@@ -269,7 +251,6 @@ int SalvaRegistroVenda(RegistroVenda *venda, FILE *arq_vendas) {
  *    col 0 → id_venda  | col 1 → id_pet   | col 2 → id_cliente
  *    col 3 → qtd_itens | col 4 → total    | col 5 → troco
  * ═══════════════════════════════════════════════════════════════════════════ */
-
 void GerarRelatorioVendas(FILE *arq_vendas) {
     #define NUM_COLUNAS 6
 
@@ -283,14 +264,14 @@ void GerarRelatorioVendas(FILE *arq_vendas) {
         return;
     }
 
-    /* Aloca vetor dinâmico de ponteiros (linhas) [LP2 — Vetor Dinâmico] */
+    // Aloca vetor dinâmico de ponteiros (linhas)
     float **matriz = (float **)malloc(nLinhas * sizeof(float *));
     if (matriz == NULL) {
         printf("  ERRO: Memoria insuficiente para o relatorio.\n");
         return;
     }
 
-    /* Aloca cada linha (vetor de NUM_COLUNAS floats) [LP2 — Matriz Dinâmica] */
+    // Aloca cada linha (vetor de NUM_COLUNAS floats)
     for (int i = 0; i < nLinhas; i++) {
         matriz[i] = (float *)malloc(NUM_COLUNAS * sizeof(float));
         if (matriz[i] == NULL) {
@@ -302,7 +283,7 @@ void GerarRelatorioVendas(FILE *arq_vendas) {
         }
     }
 
-    /* Preenche a matriz lendo os registros do arquivo */
+    // Preenche a matriz lendo os registros do arquivo
     RegistroVenda reg;
     rewind(arq_vendas);
     for (int i = 0; i < nLinhas; i++) {
@@ -315,7 +296,7 @@ void GerarRelatorioVendas(FILE *arq_vendas) {
         matriz[i][5] = reg.troco;
     }
 
-    /* Exibe a tabela */
+    // Exibe a tabela
     printf("\n");
     printf("  ========== RELATORIO DE VENDAS ==========\n");
     printf("  %-8s | %-8s | %-10s | %-5s | %-10s | %s\n",
@@ -331,7 +312,7 @@ void GerarRelatorioVendas(FILE *arq_vendas) {
            "------------------------------------------------------------------");
     printf("  Total de vendas: %d\n\n", nLinhas);
 
-    /* Libera a matriz dinâmica */
+    // Libera a matriz dinâmica
     for (int i = 0; i < nLinhas; i++) free(matriz[i]);
     free(matriz);
 

@@ -1,12 +1,6 @@
-/*
- * menus/menu_venda.c — Implementação do menu de vendas no atendimento
- *
- * Integra o fluxo de venda da LojaIntegrada ao atendimento veterinário:
- *  • O pet já está identificado (recebido por parâmetro).
- *  • Produtos são buscados no arquivo produtos.dat.
- *  • O carrinho usa lista encadeada (LP2).
- *  • Ao finalizar, desconta estoque e grava o registro em vendas.dat.
- */
+
+// menu de vendas no atendimento
+ 
 
 #include "menu_venda.h"
 #include "../utils/utils_venda.h"
@@ -15,10 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  Funções auxiliares estáticas (visíveis apenas neste arquivo)
- * ═══════════════════════════════════════════════════════════════════════════
- */
+
+// Funções auxiliares estáticas (visíveis apenas neste arquivo)
+ 
+
 
 static void cabecalho_venda(Pet *pet) {
   limpar_tela_vet();
@@ -44,9 +38,9 @@ static void exibir_menu_opcoes(void) {
   printf("  Opcao: ");
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Desconta o estoque de todos os itens do carrinho após a venda
- * ───────────────────────────────────────────────────────────────────────── */
+
+// Desconta o estoque de todos os itens do carrinho após a venda
+ 
 static void descontar_estoque_carrinho(Carrinho *carrinho, FILE *arq_produtos) {
 
   int desconta;
@@ -61,9 +55,9 @@ static void descontar_estoque_carrinho(Carrinho *carrinho, FILE *arq_produtos) {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Monta e grava o RegistroVenda a partir do carrinho finalizado
- * ───────────────────────────────────────────────────────────────────────── */
+
+// Monta e grava o RegistroVenda a partir do carrinho finalizado
+
 static void gravar_registro_venda(Carrinho *carrinho, Pet *pet,
                                   float valor_pago, FILE *arq_vendas) {
   RegistroVenda reg;
@@ -80,7 +74,7 @@ static void gravar_registro_venda(Carrinho *carrinho, Pet *pet,
   reg.troco = valor_pago - carrinho->total;
   reg.qtd_itens = 0;
 
-  /* Popula os vetores paralelos de itens [LP2 — Vetores Dinâmicos] */
+  // Popula os vetores paralelos de itens
   ItemCarrinho *atual = carrinho->cabeca;
   while (atual != NULL && reg.qtd_itens < MAX_ITENS_NOTA) {
     int i = reg.qtd_itens;
@@ -97,10 +91,9 @@ static void gravar_registro_venda(Carrinho *carrinho, Pet *pet,
     printf("  AVISO: Nao foi possivel salvar o registro da venda.\n");
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CASE 1 — Adicionar produto
- * ═══════════════════════════════════════════════════════════════════════════
- */
+
+ // CASE 1 — Adicionar produto
+
 static void opcao_adicionar(Carrinho *carrinho, FILE *arq_produtos) {
   printf("\n  ID do produto: ");
   int id = ler_inteiro_vet();
@@ -119,10 +112,7 @@ static void opcao_adicionar(Carrinho *carrinho, FILE *arq_produtos) {
   aguardar_enter_vet();
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CASE 2 — Remover produto
- * ═══════════════════════════════════════════════════════════════════════════
- */
+// CASE 2 — Remover produto
 static void opcao_remover(Carrinho *carrinho) {
   if (carrinho->qtd_itens == 0) {
     printf("\n  O carrinho ja esta vazio.\n");
@@ -138,15 +128,7 @@ static void opcao_remover(Carrinho *carrinho) {
   aguardar_enter_vet();
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  CASE 4 — Finalizar compra
- *  Portado de realizarVenda() da LojaIntegrada e adaptado:
- *    • Não precisa selecionar cliente (já definido pelo pet em atendimento).
- *    • Desconta estoque ao confirmar.
- *    • Grava RegistroVenda em arquivo.
- *  Retorna 1 se a venda foi concluída (encerra o loop do menu).
- * ═══════════════════════════════════════════════════════════════════════════
- */
+// CASE 4 — Finalizar compra
 static int opcao_finalizar(Carrinho *carrinho, Pet *pet, FILE *arq_produtos,
                            FILE *arq_vendas) {
   int desconto;
@@ -164,7 +146,7 @@ static int opcao_finalizar(Carrinho *carrinho, Pet *pet, FILE *arq_produtos,
   printf("  ===========================================================\n\n");
   ExibeCarrinho(carrinho);
 
-  /* ── Pagamento (portado da LojaIntegrada) ── */
+  // Pagamento 
   float valor_pago = 0.0f;
   do {
     printf("  Valor pago (R$): ");
@@ -179,7 +161,7 @@ static int opcao_finalizar(Carrinho *carrinho, Pet *pet, FILE *arq_produtos,
   /* ── Nota fiscal ── */
   ImprimirNotaFiscal(carrinho, pet, valor_pago);
 
-  /* ── Desconto de estoque e persistência ── */
+  // Desconto de estoque e persistência
 
   if (arq_vendas != NULL)
     gravar_registro_venda(carrinho, pet, valor_pago, arq_vendas);
@@ -188,17 +170,14 @@ static int opcao_finalizar(Carrinho *carrinho, Pet *pet, FILE *arq_produtos,
   return 1; /* sinaliza que o menu deve encerrar */
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  MenuVendaAtendimento — ponto de entrada público
- * ═══════════════════════════════════════════════════════════════════════════
- */
+// MenuVendaAtendimento — ponto de entrada público
 void MenuVendaAtendimento(Pet *pet) {
   if (pet == NULL) {
     printf("  ERRO: Nenhum pet em atendimento.\n");
     return;
   }
 
-  /* Abre arquivo de produtos (leitura e escrita para desconto de estoque) */
+  // Abre arquivo de produtos (leitura e escrita para desconto de estoque)
   FILE *arq_produtos = fopen(ARQUIVO_PRODS, "rb+");
   if (arq_produtos == NULL) {
     printf("  ERRO: Nao foi possivel abrir '%s'.\n", ARQUIVO_PRODS);
@@ -207,11 +186,11 @@ void MenuVendaAtendimento(Pet *pet) {
     return;
   }
 
-  /* Abre/cria arquivo de vendas */
+  // Abre/cria arquivo de vendas
   FILE *arq_vendas = fopen(NOME_ARQUIVO_VENDAS, "ab");
   if (arq_vendas == NULL)
     arq_vendas = fopen(NOME_ARQUIVO_VENDAS, "wb");
-  /* Se ainda NULL, a venda prossegue sem persistência */
+  // Se ainda NULL, a venda prossegue sem persistência
 
   Carrinho carrinho;
   InicializaCarrinho(&carrinho);
@@ -222,11 +201,11 @@ void MenuVendaAtendimento(Pet *pet) {
   while (!venda_concluida) {
     cabecalho_venda(pet);
 
-    /* Exibe produtos com ponteiro de função padrão [LP2] */
+    // Exibe produtos com ponteiro de função padrão
     printf("  --- PRODUTOS DISPONIVEIS ---\n");
     ListaProdutosVenda(arq_produtos, ExibeProdutoPadrao);
 
-    /* Exibe carrinho atual (lista encadeada) */
+    // Exibe carrinho atual com lista encadeada
     printf("  --- CARRINHO ATUAL ---\n");
     ExibeCarrinho(&carrinho);
 
@@ -272,7 +251,7 @@ void MenuVendaAtendimento(Pet *pet) {
     }
   }
 
-  /* Libera todos os nós da lista encadeada [LP2 — Duplo Ponteiro] */
+  // Libera todos os nós da lista encadeada Ponteiro Duplo
   LimpaCarrinho(&carrinho);
 
   fclose(arq_produtos);
@@ -280,10 +259,7 @@ void MenuVendaAtendimento(Pet *pet) {
     fclose(arq_vendas);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  MenuRelatorioVendas — exibe histórico de vendas (matriz dinâmica)
- * ═══════════════════════════════════════════════════════════════════════════
- */
+// MenuRelatorioVendas — exibe histórico de vendas (matriz dinâmica)
 void MenuRelatorioVendas(void) {
   limpar_tela_vet();
   printf("  ===========================================================\n");
@@ -297,7 +273,7 @@ void MenuRelatorioVendas(void) {
     return;
   }
 
-  /* Chama GerarRelatorioVendas que usa matriz dinâmica [LP2] */
+  // Chama GerarRelatorioVendas que usa matriz dinâmica [LP2]
   GerarRelatorioVendas(arq_vendas);
   fclose(arq_vendas);
 
