@@ -1,13 +1,21 @@
 #include "pets.h"
+#include "utils/utilidades.h"
 #include <stdio.h>
 #include <string.h>
 
 void IniciaPet(Pet *bicho) {
 
   int c;
+  int num_digitados = 0;
 
-  printf("Id do pet: \n");
-  scanf("%d", &bicho->id);
+  do {
+
+    printf("Id do pet(5 digitos): \n");
+    scanf("%d", &bicho->id);
+
+    num_digitados = ContaDigitos(bicho->id);
+
+  } while (num_digitados != 5);
 
   printf("Id do tutor: \n");
   scanf("%d", &bicho->id_Cliente);
